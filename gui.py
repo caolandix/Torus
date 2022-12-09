@@ -527,7 +527,7 @@ def manage_stocks(stock1, stock2):
                                 initial_value=int(stock2.food))
     e1 = thorpy.Box.make(elements=[s1])
     e2 = thorpy.Box.make(elements=[s2])
-    arrow = thorpy.Image.make("doublearrow32.bmp", colorkey=(255,255,255))
+    arrow = thorpy.Image.make("images/doublearrow32.bmp", colorkey=(255,255,255))
     #
     box = thorpy.make_ok_cancel_box([title,line,e_take,e1,arrow,e2])
     box.set_main_color((200,200,255,150))
@@ -790,7 +790,7 @@ def launch_main_menu():
     cam.game = FakeGame()
     game = cam.game
     for i in range(3):
-        img = thorpy.load_image("clouds"+str(i)+".png",(0,0,0))
+        img = thorpy.load_image("images/clouds"+str(i)+".png",(0,0,0))
         img.set_alpha(parameters.CLOUD_ALPHA)
         game.clouds.append(img)
     cam.set_colorscale(get_summer())

@@ -141,8 +141,8 @@ smokegen = None
 
 def get_smokegen(n=15, color=(99,99,99), grow=0.4, i=2, prob=0.3, alpha0=255,
                     size0=None):
-    smoke_image1 = thorpy.load_image("smoke.png", (255,255,255))
-    smoke_image2 = thorpy.load_image("smoke2.png", (255,255,255))
+    smoke_image1 = thorpy.load_image("images/smoke.png", (255,255,255))
+    smoke_image2 = thorpy.load_image("images/smoke2.png", (255,255,255))
     return SmokeGenerator([smoke_image1, smoke_image2],
                                  n=n,
                                  prob=prob,
@@ -189,7 +189,7 @@ class Rain:
         for i in range(parameters.RAIN_DISTRIBUTIONS):
             self.impactsx.append(np.random.randint(0,parameters.S,parameters.RAIN_IMPACTS))
             self.impactsy.append(np.random.randint(0,parameters.S,parameters.RAIN_IMPACTS))
-        self.impact = thorpy.load_image("smoke.png")
+        self.impact = thorpy.load_image("images/smoke.png")
         self.game = game
         if img is None:
             self.imgs = get_rain_imgs(20)

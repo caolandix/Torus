@@ -29,21 +29,21 @@ class SoundCollection:
 
 def get_sounds():
     c = SoundCollection()
-    c.add("cannot.wav", "cannot")
-    c.add("ok.wav", "ok")
-    c.add("OpenSurge.ogg", "perigeo")
-    c.add("Screaming-SoundBible.com-1597978996.ogg", "scream")
-    c.add("gong.ogg", "gong")
+    c.add("sounds/cannot.wav", "cannot")
+    c.add("sounds/ok.wav", "ok")
+    c.add("sounds/OpenSurge.ogg", "perigeo")
+    c.add("sounds/Screaming-SoundBible.com-1597978996.ogg", "scream")
+    c.add("sounds/gong.ogg", "gong")
     return c
 
 
 m = {}
-m["storm"] = "storm.wav"
-m["music1"] = "music1.ogg"
-m["music2"] = "music2.ogg"
-m["music3"] = "music3.ogg"
-m["music4"] = "music4.ogg"
-m["before winter"] = "music5.ogg"
+m["storm"] = "sounds/storm.wav"
+m["music1"] = "sounds/music1.ogg"
+m["music2"] = "sounds/music2.ogg"
+m["music3"] = "sounds/music3.ogg"
+m["music4"] = "sounds/music4.ogg"
+m["before winter"] = "sounds/music5.ogg"
 current = None
 
 def play_random_music():

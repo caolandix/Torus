@@ -55,7 +55,7 @@ def launch_perigeo_text():
 
 
 def get_intro_text():
-    image = thorpy.load_image("message_in_a_bottle_by_solid_pawn.png")
+    image = thorpy.load_image("images/message_in_a_bottle_by_solid_pawn.png")
     image = pygame.transform.scale(image, (parameters.S,parameters.S))
     title_text = "Dear friend,\nA few years ago, I found a message in a bottle near the sea...\n"
     title = thorpy.make_text(title_text, thorpy.style.TITLE_FONT_SIZE, gui.TCOLOR)
@@ -70,7 +70,7 @@ def get_intro_text():
             "explorer Girato Settentrio completed the South-North around the world travel, it was clear that Gottfried Perigeo thought the planet"+\
             "is a torus , otherwise the travel he initiated was a suicide, because of the absolute extreme difficulty of the West-East round trip, if it exists.\n\n"+\
             "    I know you trust in my science, my friend, and I have to admit you are one of the few ones. Here is my demand:\n"+\
-            "Take all my money. Buy ship, hire mens, prepare a big exploration trip. Find Perigeo's shipwreck, pursue his travel, and finish what he began. Bring back with you a keepsake of Perigeo. He deserves it.\n"+\
+            "Take all my money. Buy ship, hire men, prepare a big exploration trip. Find Perigeo's shipwreck, pursue his travel, and finish what he began. Bring back with you a keepsake of Perigeo. He deserves it.\n"+\
             "\n        You cannot let him in here."
     end_text = "Prove the world that our planet is toroidal!"
     end = thorpy.make_text(end_text, thorpy.style.TITLE_FONT_SIZE, gui.TCOLOR)

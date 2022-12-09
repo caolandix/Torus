@@ -56,7 +56,7 @@ def look_for_structure(game, chunk, imgs, hmap, n, type_):
     while i < parameters.VILLAGE_TRY:
         chunkpos = np.random.randint(0,parameters.S,2)
         cx,cy = chunkpos
-        h = np.sum(hmap[cx:cx+m,cy:cy+m]) / (m*m)
+        h = np.sum(hmap[cx:cx+int(m),cy:cy+int(m)]) / (m*m)
         if h > parameters.VILLAGE_LEVEL:
             force_build_structure(game, imgs, chunk, chunkpos, n, type_)
             return True

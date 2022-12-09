@@ -110,41 +110,41 @@ def distance_to_center(pos):
 def load_images():
     #
     global left, right, up, down, compass, girouette, thermo, houses, flag, tent, imgs_ship, star, perigeo, treasure
-    perigeo_img = thorpy.load_image("boat_perigeo.png",(255,255,255))
+    perigeo_img = thorpy.load_image("images/boat_perigeo.png",(255,255,255))
     perigeo = Tile(perigeo_img, Vector2(parameters.WRECK_COORD)*parameters.S)
     #
-    lc = thorpy.load_image("boat_left_2.png",(255,255,255))
-    rc = thorpy.load_image("boat_right_2.png",(255,255,255))
-    uc = thorpy.load_image("boat_rear_2.png",(255,255,255))
-    dc = thorpy.load_image("boat_front_2.png",(255,255,255))
+    lc = thorpy.load_image("images/boat_left_2.png",(255,255,255))
+    rc = thorpy.load_image("images/boat_right_2.png",(255,255,255))
+    uc = thorpy.load_image("images/boat_rear_2.png",(255,255,255))
+    dc = thorpy.load_image("images/boat_front_2.png",(255,255,255))
     #
-    lj = thorpy.load_image("boat_left_1.png",(255,255,255))
-    rj = thorpy.load_image("boat_right_1.png",(255,255,255))
-    uj = thorpy.load_image("boat_rear_1.png",(255,255,255))
-    dj = thorpy.load_image("boat_front_1.png",(255,255,255))
+    lj = thorpy.load_image("images/boat_left_1.png",(255,255,255))
+    rj = thorpy.load_image("images/boat_right_1.png",(255,255,255))
+    uj = thorpy.load_image("images/boat_rear_1.png",(255,255,255))
+    dj = thorpy.load_image("images/boat_front_1.png",(255,255,255))
     #
     left,right,up,down = (lj,rj,uj,dj)
     imgs_ship[CARAVEL] = (lc,rc,uc,dc)
     imgs_ship[JUNK] = (lj,rj,uj,dj)
-##    left = thorpy.load_image("boat_left_"+SHIP_STR+".png",(255,255,255))
-##    right = thorpy.load_image("boat_right_"+SHIP_STR+".png",(255,255,255))
-##    up = thorpy.load_image("boat_rear_"+SHIP_STR+".png",(255,255,255))
-##    down = thorpy.load_image("boat_front_"+SHIP_STR+".png",(255,255,255))
+##    left = thorpy.load_image("images/boat_left_"+SHIP_STR+".png",(255,255,255))
+##    right = thorpy.load_image("images/boat_right_"+SHIP_STR+".png",(255,255,255))
+##    up = thorpy.load_image("images/boat_rear_"+SHIP_STR+".png",(255,255,255))
+##    down = thorpy.load_image("images/boat_front_"+SHIP_STR+".png",(255,255,255))
     #
-    star = thorpy.load_image("star.png", (255,255,255))
-    compass = thorpy.load_image("r6.png",(255,255,255))
+    star = thorpy.load_image("images/star.png", (255,255,255))
+    compass = thorpy.load_image("images/r6.png",(255,255,255))
     compass.set_alpha(160)
-    thermo = thorpy.load_image("thermometer.png",(255,255,255))
+    thermo = thorpy.load_image("images/thermometer.png",(255,255,255))
     for i in range(2):
-        houses.append(thorpy.load_image("house"+str(i)+".png", (255,255,255)))
-        oasises.append(thorpy.load_image("oasis"+str(i)+".png", (255,255,255)))
-        firs.append(thorpy.load_image("fir"+str(i)+".png", (255,255,255)))
-    tent = thorpy.load_image("tent2.png",(255,255,255))
-    flag = thorpy.load_image("flag.png",(255,255,255))
+        houses.append(thorpy.load_image("images/house"+str(i)+".png", (255,255,255)))
+        oasises.append(thorpy.load_image("images/oasis"+str(i)+".png", (255,255,255)))
+        firs.append(thorpy.load_image("images/fir"+str(i)+".png", (255,255,255)))
+    tent = thorpy.load_image("images/tent2.png",(255,255,255))
+    flag = thorpy.load_image("images/flag.png",(255,255,255))
     i = 0
     for i in range(6):
-        imgs_arrows.append(thorpy.load_image("arrow"+str(i)+".png", (255,255,255)))
-    treasure = thorpy.load_image("treasure.png",(255,255,255))
+        imgs_arrows.append(thorpy.load_image("images/arrow"+str(i)+".png", (255,255,255)))
+    treasure = thorpy.load_image("images/treasure.png",(255,255,255))
 
 
 def compute_parameters():
@@ -168,7 +168,7 @@ class Game:
                         "Winter comes in 5 days.\nBe sure that the ship is far from the lands, or it will become captive of the ices")
         self.clouds = []
         for i in range(3):
-            img = thorpy.load_image("clouds"+str(i)+".png",(0,0,0))
+            img = thorpy.load_image("images/clouds"+str(i)+".png",(0,0,0))
             img.set_alpha(parameters.CLOUD_ALPHA)
             self.clouds.append(img)
         #characters
@@ -243,7 +243,7 @@ class Game:
         self.storms = np.random.randint(2,10000,400).tolist()
 ##        self.storms[0] = 1
         self.rain = fx.Rain(self, 150)
-        self.snow = fx.Rain(self, 150, thorpy.load_image("snowflake.png",(0,0,0)))
+        self.snow = fx.Rain(self, 150, thorpy.load_image("images/snowflake.png",(0,0,0)))
         self.falls = self.rain
         self.seasons = [summer, winter]
         self.season_idx = 0
@@ -925,7 +925,7 @@ class Game:
     def refresh_temperature(self):
         #climate contribution
         xclim, yclim = self.get_clim_coord()
-        clim_temp = self.climate.temp[xclim,yclim]
+        clim_temp = self.climate.temp[int(xclim),int(yclim)]
         clim_term = parameters.CLIMATE_FACTOR*clim_temp
         #altitude contribution
         height_temp = max(self.height, parameters.SUMMER_LEVEL)
