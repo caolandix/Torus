@@ -38,15 +38,14 @@ class SmokeGenerator(object):
                                                     color_target=color,
                                                     colorkey=(255,255,255))
             self.imgs = self.build_imgs() #on the form img[sample][time]
-        self.i = i
+        self.curr_keyaction = i
         self.smokes = []
         self.body = None
         self.id = SmokeGenerator.current_id
         SmokeGenerator.current_id += 1
 
     def get_copy(self):
-        gen = SmokeGenerator(samples=self.samples, n=self.n, mov=self.mov,
-                                prob=self.prob, i=self.i, copy=True)
+        gen = SmokeGenerator(samples=self.samples, n=self.n, mov=self.mov, prob=self.prob, i=self.curr_keyaction, copy=True)
         gen.imgs = self.imgs
         return gen
 
@@ -54,14 +53,14 @@ class SmokeGenerator(object):
         imgs = {}
         for s in self.samples:
             imgs[s] = []
-            w,h = self.size0[s]
+            width, height = self.size0[s]
             alpha = self.alpha0
             for i in range(self.n):
-                w += self.grow
-                h += self.grow
+                width += self.grow
+                height += self.grow
                 alpha -= self.opac
-                img = self.scale_func(s, (int(w), int(h)))
-                img.set_colorkey((255,255,255))
+                img = self.scale_func(s, (int(width), int(height)))
+                img.set_colorkey((255, 255, 255))
                 img.set_alpha(int(alpha))
                 imgs[s].append(img)
         return imgs

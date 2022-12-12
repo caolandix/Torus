@@ -7,7 +7,7 @@ class Character(Controllable):
     def __init__(self, name, color):
         Controllable.__init__(self)
         self.name = name
-        self.life = 1.
+        self.life = 1.0
         self.hunting = 0.1
         self.ship_skill = 0.1
         self.color = color
@@ -17,19 +17,23 @@ class Character(Controllable):
         interior = thorpy.graphics.get_aa_ellipsis((parameters.CHAR_SIZE-2,
                                                     parameters.CHAR_SIZE-2),
                                                     color)
-        self.img.blit(interior,(1,1))
+        self.img.blit(interior, (1,1))
         self.death_text = ""
-        self.weakness = 0.
+        self.weakness = 0.0
         self.aboard = True
 
     def refresh_life(self, stock, temperature_bad):
         tmp = self.life
-        self.life -= parameters.TBAD_FACTOR*temperature_bad*(self.weakness+0.2)
+        self.life -= (parameters.TBAD_FACTOR * temperature_bad * (self.weakness + 0.2)) + parameters
         food_consumption = min(stock.food, parameters.FOOD_PER_TURN)
+        water_consumption = min(stock.water, paramaters.WATER_PER_TURN)
         self.life += food_consumption
         stock.food -= food_consumption
+        stock.water -= water_consumption
         if stock.food < 0:
             stock.food = 0
+        if stock.water < 0:
+            stock.water = 0
         self.control_life()
         return tmp != self.life
 

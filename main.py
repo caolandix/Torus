@@ -1,4 +1,3 @@
-
 import time
 import numpy as np
 import pygame
@@ -51,18 +50,18 @@ def run_game():
         sm.load_parameters()
     
     Camtype=parameters.get_camera_type()
-    cam = Camtype(chunk=(0,0), pos=(0,0), seed=SEED, world_size=parameters.WORLD_SIZE)
+    cam = Camtype(chunk=(0, 0), pos=(0, 0), seed=SEED, world_size=parameters.WORLD_SIZE)
     
     core.load_images()
     core.compute_parameters()
     
-    wind = Wind((-1.,-1.),(1.,1.),(-1., -1.),(1.,1.),(10000,10000))
+    wind = Wind((-1.0, -1.0), (1.0, 1.0), (-1.0, -1.0), (1.0, 1.0), (10000, 10000))
     game = core.Game(cam, wind, climate, e_bckgr)
     
-    game.set_ship(Ship(mass=0.3, maxvel=3., life=1., captain=None))
+    game.set_ship(Ship(mass=0.3, maxvel=3.0, life=1.0, captain=None))
     game.refresh_controllables()
     
-    reac_time = thorpy.ConstantReaction(thorpy.constants.THORPY_EVENT, game.reac_time, {"id":thorpy.constants.EVENT_TIME})
+    reac_time = thorpy.ConstantReaction(thorpy.constants.THORPY_EVENT, game.reac_time, {"id" : thorpy.constants.EVENT_TIME})
     reac_keydown = thorpy.Reaction(pygame.KEYDOWN, game.reac_keydown)
     e_bckgr.add_reaction(reac_keydown)
     e_bckgr.add_reaction(reac_time)
@@ -73,21 +72,24 @@ def run_game():
         #configure new game
         varset = gui.game_parameters_menu()
         #
-        #difficulty : TREASURE_PROB, MAX_FLAG, FOOD_PER_TURN, MAX_CAMPS, OASIS_PROB
-        difficulties = {"easy":(1., 10, 1, 5, 1.),
-                        "medium":(0.8, 5, 1, 3, 0.8),
-                        "hard":(0.4, 3, 1, 1, 0.7)}
+        #difficulty : TREASURE_PROB, MAX_FLAG, FOOD_PER_TURN, WATER_PER_TURN, MAX_CAMPS, OASIS_PROB
+        difficulties = {
+            "easy":(1.0, 10, 1, 1, 5, 1.0),
+            "medium":(0.8, 5, 1, 1, 3, 0.8),
+            "hard":(0.4, 3, 1, 1, 1, 0.7)
+        }
         seed = varset.get_value("seed")
     ##    seed = 42877
-        parameters.WORLD_SIZE = varset.get_value("worldx"),varset.get_value("worldy")
+        parameters.WORLD_SIZE = varset.get_value("worldx"), varset.get_value("worldy")
         parameters.set_world_size(parameters.WORLD_SIZE)
         parameters.SEASON_MOD_DAYS = varset.get_value("seasonmod")
         diff = difficulties[varset.get_value("difficulty")]
         parameters.TREASURE_PROB = diff[0]
         parameters.MAX_FLAGS = diff[1]
         parameters.FOOD_PER_TURN = diff[2]
-        parameters.MAX_CAMPS = diff[3]
-        parameters.OASIS_PROB = diff[4]
+        parameters.WATER_PER_TURN = diff[3]
+        parameters.MAX_CAMPS = diff[4]
+        parameters.OASIS_PROB = diff[5]
         cam.reset(seed)
         game.next_season = parameters.SEASON_MOD_DAYS
         core.perigeo.img_pos = Vector2(parameters.WRECK_COORD)*parameters.S
@@ -103,8 +105,8 @@ def run_game():
         gui.show_loading()
         ##image = thorpy.load_image("images/bottle.png")
         image = thorpy.load_image("images/message_in_a_bottle_by_solid_pawn.png")
-        image = pygame.transform.scale(image, (parameters.S,parameters.S))
-        screen.blit(image,(0,0))
+        image = pygame.transform.scale(image, (parameters.S, parameters.S))
+        screen.blit(image, (0, 0))
         pygame.display.flip()
         m = thorpy.Menu(core.instructions)
         m.play()
@@ -115,7 +117,7 @@ def run_game():
         game.choose_captain()
         game.set_ship(game.ship)
         game.refresh_controllables()
-        app.fill((0,0,0))
+        app.fill((0, 0, 0))
         pygame.display.flip()
         game.e_x.set_text("0")
         game.e_y.set_text("0")
@@ -142,9 +144,8 @@ def run_game():
     
     # ##############################################################################
     ##thorpy.application.SHOW_FPS = True
-    m = thorpy.Menu([e_bckgr],fps=parameters.FPS)
+    m = thorpy.Menu([e_bckgr], fps=parameters.FPS)
     m.play()
-    
     app.quit()
 
 if __name__ == "__main__":

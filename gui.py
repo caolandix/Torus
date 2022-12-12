@@ -47,10 +47,11 @@ class AlertMonitor:
         self.line_flag = get_line_info("Press ", "f", " to plant flag")
         self.line_treasure = get_line_info("Press ", "t", " to get treasure")
         self.line_flag_take = get_line_info("Press ", "r", " to read/take flag")
-        self.line_village = get_line_info("Press ", "e", " to exchange food")
+        self.line_village = get_line_info("Press ", "e", " to exchange food, and 'w' to fill up water")
         self.line_camp = get_line_info("Press ", "c", " to camp/uncamp")
         self.line_hunt = get_line_info("Press ", "h", " to hunt")
         self.line_cannibal = get_line_info("Critical food! Press ", "x", " to cannibalize crew ...",4,(255,0,0))
+        self.line_dehydration = get_line_info("Critical water! Find water soon!", 4, (255, 0, 0))
         self.line_wait = get_line_info("Press ", "p", " to wait until next season")
         self.x = 5
         self.y = 5
@@ -96,10 +97,15 @@ class AlertMonitor:
             if len(self.game.living_chars) > 1:
                 blit_line(self.line_cannibal, self.x, y)
                 y += self.dh
+                
+        # manage drinking water 
+        if self.game.stock.water < parameters.CRITICAL_WATER:
+            if len(self.game.living_chars) > 1:
+                blit_line(self.line_dehydration, self.x, y)
+                y += self.dh
+                
 
-
-    def launch_fading_alert(self, text, color=(255,0,0),
-                                        size=thorpy.style.FONT_SIZE):
+    def launch_fading_alert(self, text, color=(255,0,0), size=thorpy.style.FONT_SIZE):
         if isinstance(size, str):
             size = thorpy.style.FONT_SIZE + int(float(size))
         e = thorpy.make_text(text,font_color=color,font_size=size)
@@ -164,7 +170,7 @@ class GUI:
     def __init__(self, game):
         self.game = game
         self.game.gui = self
-        self.e_chars = {c:None for c in self.game.chars()}
+        self.e_chars = { c:None for c in self.game.chars() }
         #
         import scenario
         def l_func_after():
@@ -193,10 +199,9 @@ class GUI:
         self.pause_launcher = thorpy.get_launcher(self.e_pause,
                                                     launching=game.element)
         self.e_options.user_params = {"game":game,"epause":self.e_pause}
-        reac_esc = thorpy.ConstantReaction(pygame.KEYDOWN,
-                                            self.pause_launcher.launch,
-                                            {"key":pygame.K_ESCAPE})
+        reac_esc = thorpy.ConstantReaction(pygame.KEYDOWN, self.pause_launcher.launch, {"key":pygame.K_ESCAPE})
         self.game.element.add_reaction(reac_esc)
+        
         self.e_pause.set_main_color((200,200,255,100))
         def quit_game():
             thorpy.launch_blocking_choices("This will quit the game. Make sure you saved the game.",
@@ -243,38 +248,38 @@ def set_game_gui(game, compass_pos, compass, thermo_pos, thermo):
     game.e_coords.move((-5,0))
     #
 ##        game.life_ship = get_lifebar("Ship")
-    game.e_food = LifeBar("Food", color=(0,255,0))
+    game.e_food = LifeBar("Food", color=(0, 255, 0))
+    game.e_water = LifeBar("Water", color=(0, 0, 255))
     game.e_life_ship = LifeBar("Ship seaworthy")
     game.e_life_a = LifeBar("Astronomer", color=parameters.A_COLOR)
     game.e_life_h = LifeBar("Hunter", color=parameters.H_COLOR)
     game.e_life_c = LifeBar("Captain", color=parameters.C_COLOR)
     #
     game.e_life = thorpy.Element.make(elements=[game.e_food,
+                                                game.e_water,
                                                 game.e_life_ship,
-                                                thorpy.Line.make(80,"h"),
+                                                thorpy.Line.make(80, "h"),
                                                 thorpy.make_text("Life"),
                                                 game.e_life_a,
                                                 game.e_life_h,
                                                 game.e_life_c])
-    game.e_life.set_main_color((200,200,255,100))
-    thorpy.store(game.e_life, gap=10)
+    game.e_life.set_main_color((200, 200, 255, 100))
+    thorpy.store(game.e_life, gap = 10)
     game.e_life.fit_children()
-    game.e_life.set_topleft(Vector2(thermo_pos)+(0,thermo.get_size()[1]+10))
-    game.e_life.stick_to(game.e_coords,"bottom","top")
-    game.e_life.stick_to("screen","right","right",align=False)
-    game.e_life.move((0,10))
+    game.e_life.set_topleft(Vector2(thermo_pos) + (0,thermo.get_size()[1] + 10))
+    game.e_life.stick_to(game.e_coords, "bottom", "top")
+    game.e_life.stick_to("screen", "right", "right", align=False)
+    game.e_life.move((0, 10))
     game.echars = {game.a:game.e_life_a, game.h:game.e_life_h, game.c:game.e_life_c}
     #
-    game.e_clock = thorpy.make_text("Day 0",
-                                        font_size=thorpy.style.FONT_SIZE+2)
+    game.e_clock = thorpy.make_text("Day 0", font_size=thorpy.style.FONT_SIZE+2)
     game.e_clock.stick_to(game.e_life,"top","bottom")
     game.e_clock.set_topleft((None,3))
 
 
 
 def read_flag(flag):
-    title = thorpy.make_text(flag.title, font_size=thorpy.style.FONT_SIZE+3,
-                                font_color=TCOLOR)
+    title = thorpy.make_text(flag.title, font_size=thorpy.style.FONT_SIZE+3, font_color=TCOLOR)
     line = thorpy.Line.make(100, "h")
     text = thorpy.make_text(thorpy.pack_text(100, flag.text))
     elements = [title, line, text]
@@ -297,8 +302,7 @@ def read_flag(flag):
     return Choice.ok
 
 def read_treasure(treas):
-    title = thorpy.make_text(treas.title, font_size=thorpy.style.FONT_SIZE+3,
-                                font_color=TCOLOR)
+    title = thorpy.make_text(treas.title, font_size=thorpy.style.FONT_SIZE+3, font_color=TCOLOR)
     line = thorpy.Line.make(100, "h")
     text = thorpy.make_text(thorpy.pack_text(100, treas.text))
     elements = [title, line, text]
@@ -510,21 +514,15 @@ def manage_stocks(stock1, stock2):
         v = stock1.food
     class Os2:
         v = stock2.food
-    title = thorpy.make_text("Food stock management",
-                                font_size=thorpy.style.FONT_SIZE+3,
-                                font_color=TCOLOR)
+    title = thorpy.make_text("Food stock management", font_size=thorpy.style.FONT_SIZE+3, font_color=TCOLOR)
     line = thorpy.Line.make(300, "h")
     def take_all():
         stock1.refood_from(stock2)
         thorpy.functions.quit_menu_func()
 ##    print(stock1,stock2)
     e_take = thorpy.make_button("Take all", func=take_all)
-    s1 = thorpy.SliderX.make(length=350, limvals=(0, stock1.max_food),
-                                text=stock1.name, type_=int,
-                                initial_value=int(stock1.food))
-    s2 = thorpy.SliderX.make(length=350, limvals=(0, stock2.max_food),
-                                text=stock2.name, type_=int,
-                                initial_value=int(stock2.food))
+    s1 = thorpy.SliderX.make(length=350, limvals=(0, stock1.max_food), text=stock1.name, type_=int, initial_value=int(stock1.food))
+    s2 = thorpy.SliderX.make(length=350, limvals=(0, stock2.max_food), text=stock2.name, type_=int, initial_value=int(stock2.food))
     e1 = thorpy.Box.make(elements=[s1])
     e2 = thorpy.Box.make(elements=[s2])
     arrow = thorpy.Image.make("images/doublearrow32.bmp", colorkey=(255,255,255))

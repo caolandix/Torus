@@ -285,12 +285,12 @@ class Camera:
 class Cloud:
 
     def __init__(self,args):
-        x,y,vx,vy = args
+        x, y, vx, vy = args
         self.x = x
         self.y = y
         self.vx = vx/2000.
         self.vy = vy/200000.
-        self.i = self.x%3
+        self.curr_keyaction = self.x % 3
 
     def iterate(self):
         self.x += self.vx

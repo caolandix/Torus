@@ -1,12 +1,15 @@
 from pygame.math import Vector2
 import parameters
+import ship
 
 class FoodStock:
 
     def __init__(self, n):
         self.n = n
-        self.max_food = int(parameters.MAX_WSF*n/3.)
+        self.max_food = int(parameters.MAX_WSF * n / 3.0)
+        self.max_water = 100 
         self.food = 0
+        self.water = 0
         self.name = "bla"
 
     def refood_from(self, stock):
@@ -15,9 +18,20 @@ class FoodStock:
         self.food += qty
         stock.food -= qty
 
+    def rewater_from(self, stock):
+        lack = self.max_water - self.water
+        qty = min(lack, stock.water)
+        self.water += qty
+        stock.water -= qty
+
+    """
+    Normalize the human consumables
+    """
     def make_consistent(self):
         if self.food > self.max_food: self.food = self.max_food
         if self.food < 0: self.food = 0
+        if self.water > self.max_water: self.water = self.max_water
+        if self.water < 0: self.water = 0
 
     def set_food(self, food):
         self.food = food
@@ -25,6 +39,14 @@ class FoodStock:
 
     def add_food(self, qty):
         self.food += qty
+        self.make_consistent()
+
+    def set_water(self, water):
+        self.water = water
+        self.make_consistent()
+
+    def add_water(self, qty):
+        self.water += qty
         self.make_consistent()
 
 class Tile:
@@ -53,6 +75,9 @@ class Flag(Tile):
         self.title = title
         self.text = text
 
+"""
+Note: Water is not considered a treasure because currently it can only be gotten from villages
+"""
 class Treasure(Flag): #degeulasse mais rapide
 
     def __init__(self, img, img_pos, food, n_hunt, chunk):

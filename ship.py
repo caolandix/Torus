@@ -6,25 +6,25 @@ import fx
 
 def rotate_in_water(img, degrees):
     i = pygame.transform.rotate(img, degrees)
-    ws,hs = img.get_size()
-    wi,hi = i.get_size()
-    s = pygame.Surface((ws,hs))
-    s.fill((255,255,255))
-    s.blit(i,((ws-wi)//2,0))
-    s.set_colorkey((255,255,255))
+    ws, hs = img.get_size()
+    wi, hi = i.get_size()
+    s = pygame.Surface((ws, hs))
+    s.fill((255, 255, 255))
+    s.blit(i, ((ws - wi) // 2,0))
+    s.set_colorkey((255, 255, 255))
     return s
 
 def get_n_phases(img, degree, n=parameters.N_PHASES_SHIP):
     imgs = []
-    for i in range(1,n):#n-1
-        angle = i*degree/n
-        imgs.append(rotate_in_water(img,angle))
-    imgs += imgs[::-1]#n-1
+    for i in range(1, n): #n-1
+        angle = i * degree / n
+        imgs.append(rotate_in_water(img, angle))
+    imgs += imgs[::-1] #n-1
     imgs2 = []
-    for i in range(1,n):#n-1
-        angle = i*degree/n
-        imgs2.append(rotate_in_water(img,-angle))
-    imgs2 += imgs2[::-1]#n-1
+    for i in range(1, n): #n-1
+        angle = i * degree / n
+        imgs2.append(rotate_in_water(img, -angle))
+    imgs2 += imgs2[::-1] #n-1
     return imgs + imgs2
 
 class Ship(Controllable):
@@ -32,8 +32,10 @@ class Ship(Controllable):
     def __init__(self, mass, maxvel, life, captain):
         Controllable.__init__(self)
         self.model = 0
-        self.max_food = 2*parameters.MAX_WSF
+        self.max_food = 2 * parameters.MAX_WSF
+        self.max_water = 100        # in gallons
         self.food = self.max_food
+        self.water = self.max_water
         self.mass = mass
         self.maxvel = maxvel/10.
         self.life = life
@@ -47,18 +49,23 @@ class Ship(Controllable):
 ##        self.reflects = None
         self.normal_imgs = None
         self.storm_imgs = None
-        self.i = 0
+        self.curr_keyaction = 0
         self.mod_rot = parameters.MOD_LOW
         self.mod_phase = parameters.MOD_PHASE_SHIP
         self.side = 0
-        self.smokegen = fx.get_smokegen(n=100, color=(255,255,255), grow=0.1,
-                                            i=30, prob=0.1, alpha0=255)
+        self.smokegen = fx.get_smokegen(n=100, color=(255,255,255), grow=0.1, i=30, prob=0.1, alpha0=255)
 
     def refood_from(self, stock):
         lack = self.max_food - self.food
         qty = min(lack, stock.food)
         self.food += qty
         stock.food -= qty
+        
+    def rewater_from(self, stock):
+        lack = self.max_water - self.water
+        qty = min(lack, stock.water)
+        self.water += qty
+        stock.water -= qty    
 
     def refresh(self, wind, input_direction):
         if self.life > 0:
@@ -87,10 +94,10 @@ class Ship(Controllable):
     def refresh_img(self, i, side):
         self.side = side
 ##        print(side, self.i, side+self.i, len(self.imgs))
-        self.img = self.imgs[side+self.i]
+        self.img = self.imgs[side+self.curr_keyaction]
 ##        self.reflect = self.reflects[side+self.i]
-        if i%self.mod_rot == 0:
-            self.i = (self.i+1)%self.mod_phase
+        if i % self.mod_rot == 0:
+            self.i = (self.curr_keyaction + 1) % self.mod_phase
 
     def anchor(self):
         self.img = self.imgs[self.side]

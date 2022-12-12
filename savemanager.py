@@ -7,13 +7,13 @@ import parameters
 
 GAME_ATTRS = ["i","season_idx","next_season","does_perigeo","score","n_hunt","is_winter","campos","aboard"]
 CAM_ATTRS = ["seed","pos","chunk"]
-VILLAGES_ATTRS = ["food","pos","type"]
+VILLAGES_ATTRS = ["food", "water", "pos","type"]
 STATS_ATTRS = ["dist","alt","last_pos","last_alt","mMalt","mMtemp","maxSpeed"]
 CHARS_ATTRS = ["life","img_pos","weakness","hunting","ship_skill","aboard"]
 FLAGS_ATTRS = ["img_pos","title","text"]
 JOURNAL_ATTRS = ["entries"]
-TREAS_ATTRS = ["food","img_pos","n_hunt","text"]
-SHIP_ATTRS = ["life","food","img_pos","dead","model"] #appeller autoset_captain
+TREAS_ATTRS = ["food", "img_pos","n_hunt","text"]
+SHIP_ATTRS = ["life", "food", "water", "img_pos", "dead", "model"]       #appeller autoset_captain
 
 def stringize_object(name, obj, attrs):
     text = "*"+name+"\n"
@@ -32,19 +32,19 @@ def stringize_parameters():
 def save_game(fn, game):
     text = "*date " + time.asctime()+"\n"
     text += "@epochtime="+str(time.time())+"\n"
-    text += stringize_object("game",game,GAME_ATTRS)
-    text += stringize_object("cam",game.cam,CAM_ATTRS)
-    for v in game.villages:
-        text += stringize_object("village "+v.type+" "+str(v.id),v,VILLAGES_ATTRS)
+    text += stringize_object("game", game, GAME_ATTRS)
+    text += stringize_object("cam", game.cam, CAM_ATTRS)
+    for villages in game.villages:
+        text += stringize_object("village " + villages.type + " " + str(villages.id), villages, VILLAGES_ATTRS)
     if game.is_winter:
-        for o in game.oasises:
-            text += stringize_object("oasis "+str(o.id),o,VILLAGES_ATTRS)
-    text += stringize_object("ship",game.ship,SHIP_ATTRS)
-    text += stringize_object("astronomer",game.a,CHARS_ATTRS)
-    text += stringize_object("captain",game.c,CHARS_ATTRS)
-    text += stringize_object("hunter",game.h,CHARS_ATTRS)
-    for f in game.flags:
-        text += stringize_object("flag "+str(f.img_pos),f,FLAGS_ATTRS)
+        for oasis in game.oasises:
+            text += stringize_object("oasis " + str(oasis.id), oasis, VILLAGES_ATTRS)
+    text += stringize_object("ship", game.ship, SHIP_ATTRS)
+    text += stringize_object("astronomer", game.a,CHARS_ATTRS)
+    text += stringize_object("captain", game.c,CHARS_ATTRS)
+    text += stringize_object("hunter", game.h,CHARS_ATTRS)
+    for flag in game.flags:
+        text += stringize_object("flag " + str(flag.img_pos), flag, FLAGS_ATTRS)
 ##    for t in game.treasures:
 ##        text += stringize_object("treasure "+str(t.chunk),t,TREAS_ATTRS)
     text += "*treasures_taken\n"
@@ -245,14 +245,16 @@ class SaveManager:
                     chunk = None
                 pos = np.array(listize_string(d[k]["pos"],"float"),dtype=float)
                 food = int(d[k]["food"])
+                water = int(d[k]["water"])
                 type_ = d[k]["type"]
-                self.villages[chunk] = (food, type_, pos)
+                self.villages[chunk] = (food, water, type_, pos)
                 if type_ == "c":
                     game.build_camp()
                     c = game.villages[-1]
                     c.pos = pos
                     c.id = chunk
                     c.food = food
+                    c.water = water
         #OASISES
 ##        if game.is_winter:
 ##            for k in d.keys():
@@ -283,15 +285,19 @@ class SaveManager:
                     self.treasures_taken.append((x,y))
         #SHIP
         load_object(game.ship,"ship",SHIP_ATTRS,d)
-        #CHARS
+        
+        # Crew Members
         load_object(game.a,"astronomer",CHARS_ATTRS,d)
         load_object(game.c,"captain",CHARS_ATTRS,d)
         load_object(game.h,"hunter",CHARS_ATTRS,d)
+        
         #JOURNAL
     ##    load_object(game.journal,"journal",JOURNAL_ATTRS,d)
         load_journal(game,d)
+        
         #STATS
         load_object(game.stats,"stats",STATS_ATTRS,d)
+        
         #FLAGS
         for k in d.keys():
             if "flag" in k:

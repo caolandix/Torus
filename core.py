@@ -34,15 +34,15 @@ HUNT = 2
 CAP = 3
 
 
-LEFT = Vector2(-1,0)
-RIGHT = Vector2(1,0)
-UP = Vector2(0,-1)
-DOWN = Vector2(0,1)
+LEFT = Vector2(-1, 0)
+RIGHT = Vector2(1, 0)
+UP = Vector2(0, -1)
+DOWN = Vector2(0, 1)
 
-SIDE_LEFT = 0*parameters.MOD_PHASE_SHIP
-SIDE_RIGHT = 1*parameters.MOD_PHASE_SHIP
-SIDE_UP = 2*parameters.MOD_PHASE_SHIP
-SIDE_DOWN = 3*parameters.MOD_PHASE_SHIP
+SIDE_LEFT = 0 * parameters.MOD_PHASE_SHIP
+SIDE_RIGHT = 1 * parameters.MOD_PHASE_SHIP
+SIDE_UP = 2 * parameters.MOD_PHASE_SHIP
+SIDE_DOWN = 3 * parameters.MOD_PHASE_SHIP
 
 left, right, up, down = None, None, None, None
 compass, girouette = None, None
@@ -57,7 +57,7 @@ treasure = None
 perigeo = None
 thermo = None
 imgs_ship = {}
-thermo_fluid_rect = pygame.Rect(9,3,5,39)
+thermo_fluid_rect = pygame.Rect(9, 3, 5, 39)
 imgs_arrows = []
 
 girouette_pos = None
@@ -76,7 +76,6 @@ def refresh_imgs_ship(model):
     left, right, up, down = imgs_ship[model]
 
 class Season:
-
     def __init__(self, name, colorscale, level, temp_shift, text):
         self.name = name
         self.colorscale = colorscale
@@ -94,70 +93,73 @@ class Journal:
         if self.game.a.life > 0:
             coord = self.game.get_coord_journal()
         else:
-            coord = "(?,?)"
+            coord = "(?, ?)"
         entry = (title,
-                             self.game.day,
-                             coord,
-                             self.game.alt_text,
-                             self.game.temp,
-                             text)
-        print("entry",entry)
+                 self.game.day,
+                 coord,
+                 self.game.alt_text,
+                 self.game.temp,
+                 text)
+        print("entry", entry)
         self.entries.append(entry)
 
 def distance_to_center(pos):
-    return Vector2(pos[0],pos[1]).distance_to(parameters.CENTER)
+    return Vector2(pos[0], pos[1]).distance_to(parameters.CENTER)
 
 def load_images():
     #
     global left, right, up, down, compass, girouette, thermo, houses, flag, tent, imgs_ship, star, perigeo, treasure
-    perigeo_img = thorpy.load_image("images/boat_perigeo.png",(255,255,255))
-    perigeo = Tile(perigeo_img, Vector2(parameters.WRECK_COORD)*parameters.S)
+    perigeo_img = thorpy.load_image("images/boat_perigeo.png", (255, 255, 255))
+    perigeo = Tile(perigeo_img, Vector2(parameters.WRECK_COORD) * parameters.S)
+    
+    # Caracal
+    lc = thorpy.load_image("images/boat_left_2.png", (255,255,255))
+    rc = thorpy.load_image("images/boat_right_2.png", (255,255,255))
+    uc = thorpy.load_image("images/boat_rear_2.png", (255,255,255))
+    dc = thorpy.load_image("images/boat_front_2.png", (255,255,255))
+    
+    # Junk
+    lj = thorpy.load_image("images/boat_left_1.png", (255,255,255))
+    rj = thorpy.load_image("images/boat_right_1.png", (255,255,255))
+    uj = thorpy.load_image("images/boat_rear_1.png", (255,255,255))
+    dj = thorpy.load_image("images/boat_front_1.png", (255,255,255))
+    
     #
-    lc = thorpy.load_image("images/boat_left_2.png",(255,255,255))
-    rc = thorpy.load_image("images/boat_right_2.png",(255,255,255))
-    uc = thorpy.load_image("images/boat_rear_2.png",(255,255,255))
-    dc = thorpy.load_image("images/boat_front_2.png",(255,255,255))
-    #
-    lj = thorpy.load_image("images/boat_left_1.png",(255,255,255))
-    rj = thorpy.load_image("images/boat_right_1.png",(255,255,255))
-    uj = thorpy.load_image("images/boat_rear_1.png",(255,255,255))
-    dj = thorpy.load_image("images/boat_front_1.png",(255,255,255))
-    #
-    left,right,up,down = (lj,rj,uj,dj)
-    imgs_ship[CARAVEL] = (lc,rc,uc,dc)
-    imgs_ship[JUNK] = (lj,rj,uj,dj)
+    left, right, up, down = (lj, rj, uj, dj)
+    imgs_ship[CARAVEL] = (lc, rc, uc, dc)
+    imgs_ship[JUNK] = (lj, rj, uj, dj)
 ##    left = thorpy.load_image("images/boat_left_"+SHIP_STR+".png",(255,255,255))
 ##    right = thorpy.load_image("images/boat_right_"+SHIP_STR+".png",(255,255,255))
 ##    up = thorpy.load_image("images/boat_rear_"+SHIP_STR+".png",(255,255,255))
 ##    down = thorpy.load_image("images/boat_front_"+SHIP_STR+".png",(255,255,255))
     #
-    star = thorpy.load_image("images/star.png", (255,255,255))
-    compass = thorpy.load_image("images/r6.png",(255,255,255))
+    star = thorpy.load_image("images/star.png", (255, 255, 255))
+    compass = thorpy.load_image("images/r6.png", (255, 255, 255))
     compass.set_alpha(160)
-    thermo = thorpy.load_image("images/thermometer.png",(255,255,255))
+    thermo = thorpy.load_image("images/thermometer.png", (255, 255, 255))
     for i in range(2):
-        houses.append(thorpy.load_image("images/house"+str(i)+".png", (255,255,255)))
-        oasises.append(thorpy.load_image("images/oasis"+str(i)+".png", (255,255,255)))
-        firs.append(thorpy.load_image("images/fir"+str(i)+".png", (255,255,255)))
-    tent = thorpy.load_image("images/tent2.png",(255,255,255))
-    flag = thorpy.load_image("images/flag.png",(255,255,255))
+        houses.append(thorpy.load_image("images/house" + str(i) + ".png", (255, 255, 255)))
+        oasises.append(thorpy.load_image("images/oasis" + str(i) + ".png", (255, 255, 255)))
+        firs.append(thorpy.load_image("images/fir" + str(i) + ".png", (255, 255, 255)))
+    tent = thorpy.load_image("images/tent2.png", (255, 255, 255))
+    flag = thorpy.load_image("images/flag.png", (255, 255, 255))
     i = 0
     for i in range(6):
-        imgs_arrows.append(thorpy.load_image("images/arrow"+str(i)+".png", (255,255,255)))
-    treasure = thorpy.load_image("images/treasure.png",(255,255,255))
+        imgs_arrows.append(thorpy.load_image("images/arrow" + str(i) + ".png", (255, 255, 255)))
+    treasure = thorpy.load_image("images/treasure.png", (255, 255, 255))
 
 
 def compute_parameters():
     global compass_pos, girouette_pos, thermo_pos, fluid_pos
-    w,h = compass.get_size()
+    width, height = compass.get_size()
     margin = 20
-    compass_pos = (parameters.S-w-margin,20+margin)
-    girouette_pos = (compass_pos[0]+w//2-1, compass_pos[1]+h//2-1)
+    compass_pos = (parameters.S - width - margin, 20 + margin)
+    girouette_pos = (compass_pos[0] + width // 2 - 1, compass_pos[1] + height // 2 - 1)
     r = thermo.get_rect()
     r.centerx = girouette_pos[0]
-    r.y = compass_pos[1] + h//2 + parameters.GIROUETTE_LENGTH + margin
+    r.y = compass_pos[1] + height // 2 + parameters.GIROUETTE_LENGTH + margin
     thermo_pos = r.topleft
-    fluid_pos = (thermo_pos[0]+10, thermo_pos[1]+3)
+    fluid_pos = (thermo_pos[0] + 10, thermo_pos[1] + 3)
 
 class Game:
 
@@ -168,9 +170,10 @@ class Game:
                         "Winter comes in 5 days.\nBe sure that the ship is far from the lands, or it will become captive of the ices")
         self.clouds = []
         for i in range(3):
-            img = thorpy.load_image("images/clouds"+str(i)+".png",(0,0,0))
+            img = thorpy.load_image("images/clouds" + str(i) + ".png", (0, 0, 0))
             img.set_alpha(parameters.CLOUD_ALPHA)
             self.clouds.append(img)
+        
         #characters
         a = Character("Astronomer", parameters.A_COLOR)
         a.death_text = "Without astronomer, we won't know our position anymore..."
@@ -180,6 +183,7 @@ class Game:
         c = Character("Captain",  parameters.C_COLOR)
         c.ship_skill = 0.5
         c.death_text = "Without captain, the ship will be slower and weaker against rocks..."
+        
         #
         self.save = None
         self.saved = False
@@ -196,7 +200,7 @@ class Game:
         self.ship = None
         self.input_direction = Vector2()
         self.direction = False
-        self.i = 0
+        self.curr_keyaction = 0
         self.tx, self.ty = None, None
         self.controlled = None
         self.controllables = None
@@ -293,25 +297,25 @@ class Game:
         self.cam.show(self.screen)
         self.blit_villages()
         pygame.display.flip()
-        global left,right,up,down
+        global left, right, up, down
         lc = imgs_ship[CARAVEL][0]
         lj = imgs_ship[JUNK][0]
-        carmass = 0.2
-        junmass = 0.6
-        cm = 1. - carmass
-        jm = 1. - junmass
-        ship_skills = ({"Maneuverability":cm, "Velocity":0.6, "Robustness":0.6},
-                        {"Maneuverability":jm, "Velocity":0.8, "Robustness":1.})
-        v = initializer.get_controllable_choice("Choose a ship", [lc, lj],
+        caravel_mass = 0.2
+        junk_mass = 0.6
+        cm = 1.0 - caravel_mass
+        jm = 1.0 - junk_mass
+        ship_skills = ({ "Maneuverability":cm, "Velocity":0.6, "Robustness":0.6 },
+                        { "Maneuverability":jm, "Velocity":0.8, "Robustness":1.0 })
+        choice = initializer.get_controllable_choice("Choose a ship", [lc, lj],
                                              ["Caravel", "Junk"],
                                              ship_skills,
-                                             "Ships with low mass are easier to maneuver. Since sailing is much faster than swimming, ship is a precious tool for your exploration. Don't broke it.",
+                                             "Ships with low mass are easier to maneuver. Since sailing is much faster than swimming, ship is a precious tool for your exploration. Don't break it.",
                                              "Buy",
                                              star)
-        self.ship.mass = 1. - ship_skills[v]["Maneuverability"]
-        self.ship.maxvel = ship_skills[v]["Velocity"]
-        self.ship.weakness = 1. - ship_skills[v]["Robustness"]
-        if v == 0:
+        self.ship.mass = 1.0 - ship_skills[choice]["Maneuverability"]
+        self.ship.maxvel = ship_skills[choice]["Velocity"]
+        self.ship.weakness = 1.0 - ship_skills[choice]["Robustness"]
+        if choice == 0:
             left, right, up, down = imgs_ship[CARAVEL]
             self.ship.model = CARAVEL
         else:
@@ -329,14 +333,14 @@ class Game:
         a_img.blit(self.a.img,(0,0))
         a_img = a_img.convert_alpha()
         a_img.set_colorkey((255,255,255))
-        v = initializer.get_controllable_choice("Choose an astronomer", [a_img,a_img],
+        choice = initializer.get_controllable_choice("Choose an astronomer", [a_img,a_img],
                                              ["Johannes", "Tycho"],
                                              skills,
                                              "Astronomers are able to deduce position from the stars. With no astronomer, explorers are blind.",
                                              star=star)
-        self.a.weakness = 1.-skills[v]["Health"]
-        self.a.hunting = skills[v]["Hunting"]
-        self.a.ship_skill = skills[v]["Sailing"]
+        self.a.weakness = 1.-skills[choice]["Health"]
+        self.a.hunting = skills[choice]["Hunting"]
+        self.a.ship_skill = skills[choice]["Sailing"]
 
     def choose_hunter(self):
         self.cam.show(self.screen)
@@ -349,39 +353,39 @@ class Game:
         a_img.blit(self.h.img,(0,0))
         a_img = a_img.convert_alpha()
         a_img.set_colorkey((255,255,255))
-        v = initializer.get_controllable_choice("Choose a hunter", [a_img,a_img],
+        choice = initializer.get_controllable_choice("Choose a hunter", [a_img, a_img],
                                              ["Gunter", "Gaston"],
                                              skills,
                                              "Hunters are able to find food in nature much faster than any other unit.",
                                              star = star)
-        self.h.weakness = 1. - skills[v]["Health"]
-        self.h.hunting = skills[v]["Hunting"]
-        self.h.ship_skill = skills[v]["Sailing"]
+        self.h.weakness = 1. - skills[choice]["Health"]
+        self.h.hunting = skills[choice]["Hunting"]
+        self.h.ship_skill = skills[choice]["Sailing"]
 
     def choose_captain(self):
         self.cam.show(self.screen)
         self.blit_villages()
         pygame.display.flip()
-        skills = [{"Health":0.8, "Hunting":0.2, "Sailing":0.8},
-                  {"Health":0.6, "Hunting":0., "Sailing":1.0}]
+        skills = [{ "Health":0.8, "Hunting":0.2, "Sailing":0.8},
+                  { "Health":0.6, "Hunting":0.0, "Sailing":1.0} ]
         a_img = pygame.Surface(self.c.img.get_size())
         a_img.fill((255,255,255))
         a_img.blit(self.c.img,(0,0))
         a_img = a_img.convert_alpha()
         a_img.set_colorkey((255,255,255))
-        v = initializer.get_controllable_choice("Choose a captain",
+        choice = initializer.get_controllable_choice("Choose a captain",
                                              [a_img,a_img],
                                              ["Hook", "Newton"],
                                              skills,
                                              "Captains are good at sailing. With no captain, transport by ship will be a pain.",
                                              star = star)
-        self.c.weakness = 1. - skills[v]["Health"]
-        self.c.hunting = skills[v]["Hunting"]
-        self.c.ship_skill = skills[v]["Sailing"]
+        self.c.weakness = 1. - skills[choice]["Health"]
+        self.c.hunting = skills[choice]["Hunting"]
+        self.c.ship_skill = skills[choice]["Sailing"]
 
     def get_clim_coord(self):
         world_level = self.cam.chunk
-        chunk_level = self.cam.pos%parameters.S / parameters.S
+        chunk_level = self.cam.pos % parameters.S / parameters.S
         return (world_level + chunk_level) * parameters.S / self.cam.world_size
 
     def chars(self):
@@ -406,7 +410,7 @@ class Game:
         collisions = self.cam.show(self.screen)
         collision_factor = self.controlled.compute_collision_factor(collisions, parameters.WATER_LEVEL)
         while collision_factor > 0.5:
-            self.set_cam_pos(self.campos-(10,0))
+            self.set_cam_pos(self.campos - (10, 0))
             self.refresh_controlled
             collisions = self.cam.show(self.screen)
             pygame.display.flip()
@@ -423,10 +427,10 @@ class Game:
         self.controlled.img_pos = Vector2(x,y)
 
     def board_ship(self):
-        self.set_cam_pos(self.ship.img_pos +\
-                                    Vector2(self.ship.img.get_size())/2)
+        self.set_cam_pos(self.ship.img_pos + Vector2(self.ship.img.get_size())/2)
         self.controlled = self.ship
         self.ship.refood_from(self.stock)
+        self.ship.rewater_from(self.stock)
         self.stock = self.ship
         self.aboard = True
 
@@ -444,6 +448,7 @@ class Game:
         self.aboard = False
         self.ship.anchor()
 
+    # Handle the space key
     def reac_space(self):
         if self.aboard: #leave ship
             self.leave_ship()
@@ -455,27 +460,41 @@ class Game:
                 self.monitor.launch_failure_alert("Too far from ship for boarding...")
         self.refresh_controlled()
 
+    # Handle the 'w' key being pressed        
+    def reac_w(self):
+        if self.near_village:
+            if self.save:
+                saved = self.save.villages.get(self.near_village.id)
+                if saved:
+                    print("previous",saved,self.near_village.id)
+                    food, water, type_, pos = saved
+                    if type_ == "v":
+                        self.near_village.set_water(water)
+            gui.manage_stocks(self.stock, self.near_village)
+            self.e_water.set_water(self.stock.water / self.stock.max_water)        
+
+    # handle the 'e' key being pressed
     def reac_e(self):
         if self.near_village:
             if self.save:
                 saved = self.save.villages.get(self.near_village.id)
                 if saved:
                     print("previous",saved,self.near_village.id)
-                    food,type_,pos = saved
+                    food, water, type_, pos = saved
                     if type_ == "v" or type_ == "o":
                         self.near_village.set_food(food)
             gui.manage_stocks(self.stock, self.near_village)
-            self.e_food.set_life(self.stock.food/self.stock.max_food)
+            self.e_food.set_life(self.stock.food / self.stock.max_food)
 
     def get_near_flag(self):
-        for f in self.flags:
-            if distance_to_center(f.img_pos) < parameters.READ_FLAG_DIST:
-                return f
+        for flag in self.flags:
+            if distance_to_center(flag.img_pos) < parameters.READ_FLAG_DIST:
+                return flag
 
     def get_near_treasure(self):
-        for t in self.treasures:
-            if distance_to_center(t.img_pos) < parameters.READ_FLAG_DIST:
-                return t
+        for treasure in self.treasures:
+            if distance_to_center(treasure.img_pos) < parameters.READ_FLAG_DIST:
+                return treasure
 
     def reac_r(self):
         if self.near_flag:
@@ -483,6 +502,9 @@ class Game:
             if take:
                 self.flags.remove(self.near_flag)
 
+    """
+    Note: Water is not currently a treasure. It can only be found in villages
+    """
     def reac_t(self):
         if self.near_treasure:
             take = gui.read_treasure(self.near_treasure)
@@ -534,28 +556,33 @@ class Game:
 
     def reac_x(self):
         ok_food = self.stock.food < parameters.CRITICAL_FOOD
+        ok_water = self.stock.water < parameters.CRITICAL_WATER
         ok_n = len(self.living_chars) > 1
-        if ok_n and ok_food:
+        if ok_n and (ok_food or ok_water):
             sound.play_music("before winter")
             sounds.gong.play()
-            choice = gui.get_cannibalism(self)
-            if choice:
-                sounds.scream.play()
-                if choice == "a":
-                    m = self.a
-                if choice == "c":
-                    m = self.c
-                if choice == "h":
-                    m = self.h
-                m.life = -100000
-                for c in self.living_chars:
-                    self.stock.add_food(parameters.FOOD_CANNIBAL)
+            if ok_food:
+                choice = gui.get_cannibalism(self)
+                if choice:
+                    sounds.scream.play()
+                    if choice == "a":
+                        m = self.a
+                    if choice == "c":
+                        m = self.c
+                    if choice == "h":
+                        m = self.h
+                    m.life = -100000
+                    for c in self.living_chars:
+                        self.stock.add_food(parameters.FOOD_CANNIBAL)
+            elif ok_water:
+                self.monitor.launch_fading_alert("You must find water now!")
         else:
             sounds.cannot.play()
-            if not ok_n:
-                self.monitor.launch_fading_alert("The only survivor does not want to eat himself...")
-            else:
-                self.monitor.launch_fading_alert("In crew members' opinion, there is too much food left to cannibalize each other.")
+            if ok_food:
+                if not ok_n:
+                    self.monitor.launch_fading_alert("The only survivor does not want to eat himself...")
+                else:
+                    self.monitor.launch_fading_alert("In crew members' opinion, there is too much food left to cannibalize each other.")
 
 
     def next_music(self):
@@ -611,16 +638,16 @@ class Game:
                     if self.hunt_success():
                         self.stock.refood_from(self.infinite_stock)
                         self.infinite_stock.food += self.stock.food # :)
-                        self.monitor.launch_success_alert("Hunting was a sucess!")
+                        self.monitor.launch_success_alert("Hunting was a success!")
                     else:
-                        self.monitor.launch_failure_alert("Failed to find any form of life here... Except the crew.")
+                        self.monitor.launch_failure_alert("Failed to find any form of edible life here... Except the crew.")
             else:
                 sounds.cannot.play()
                 self.monitor.launch_failure_alert("No arrows left. You can't hunt...")
 
         else:
             sounds.cannot.play()
-            self.monitor.launch_failure_alert("You need a camp to hunt !")
+            self.monitor.launch_failure_alert("You need a camp to hunt!")
 
     def reac_p(self):
         near = None
@@ -640,7 +667,7 @@ class Game:
                         break
         else:
             sounds.cannot.play()
-            self.monitor.launch_failure_alert("You need to be in a camp/village and to have enough food to wait !")
+            self.monitor.launch_failure_alert("You need to be in a camp/village and to have enough food and water to wait!")
 
 ##        if self.near_camp and not self.aboard:
 ##            days = round(self.get_hunt_days(),1)
@@ -659,8 +686,7 @@ class Game:
 ##                sounds.cannot.play()
 
     def build_camp(self):
-        force_build_structure(self, [tent,tent], None, None,
-                                len(self.living_chars), type_="c")
+        force_build_structure(self, [tent,tent], None, None, len(self.living_chars), type_="c")
         self.ncamps += 1
 
     def reac_c(self):
@@ -678,39 +704,39 @@ class Game:
                     self.build_camp()
                 else:
                     sounds.cannot.play()
-                    self.monitor.launch_failure_alert("You already used your "+\
-                                                    str(parameters.MAX_CAMPS)+\
-                                                    " tents. Uncamp somewhere to get tents.")
+                    self.monitor.launch_failure_alert("You already used your "+ str(parameters.MAX_CAMPS)+ " tents. Uncamp somewhere to get tents.")
             else:
                 sounds.cannot.play()
-                self.monitor.launch_failure_alert("Too close to "+self.near_village.name+"... go further.")
+                self.monitor.launch_failure_alert("Too close to " + self.near_village.name + "... go further.")
         elif not self.can_camp:
             sounds.cannot.play()
             self.monitor.launch_failure_alert("You can't camp on water or melting ice")
 
 
     def reac_keydown(self, e):
-        if self.i > self.last_key_action + parameters.DELTA_SPACE_I:
-            self.last_key_action = self.i
+        if self.curr_keyaction > self.last_key_action + parameters.DELTA_SPACE_I:
+            self.last_key_action = self.curr_keyaction
             if e.key == pygame.K_SPACE:
                 self.reac_space()
-            elif e.key == pygame.K_e:#exchange food
+            elif e.key == pygame.K_e:   #exchange food
                 self.reac_e()
-            elif e.key == pygame.K_f:#flag
+            elif e.key == pygame.K_w:   # Fill up the fresh water tanks
+                self.reac_w()
+            elif e.key == pygame.K_f:   #flag
                 self.reac_f()
-            elif e.key == pygame.K_t:#flag
+            elif e.key == pygame.K_t:   #flag
                 self.reac_t()
-            elif e.key == pygame.K_r:#read flag
+            elif e.key == pygame.K_r:   #read flag
                 self.reac_r()
-            elif e.key == pygame.K_j:#journal
+            elif e.key == pygame.K_j:   #journal
                 self.reac_j()
-            elif e.key == pygame.K_c:#camp
+            elif e.key == pygame.K_c:   #camp
                 self.reac_c()
-            elif e.key == pygame.K_h:#hunt
+            elif e.key == pygame.K_h:   #hunt
                 self.reac_h()
-            elif e.key == pygame.K_p:#wait
+            elif e.key == pygame.K_p:   #wait
                 self.reac_p()
-            elif e.key == pygame.K_x:#kill crew
+            elif e.key == pygame.K_x:   #kill crew
                 self.reac_x()
 
     def process_direction(self):
@@ -745,10 +771,10 @@ class Game:
         self.refresh_img_pos(delta)
         self.cam.show(self.screen)
 
-    def kill_member(self,c):
-        c.life = -10000
-        thorpy.launch_blocking_alert(c.name+" is dead.", self.element)
-        self.journal.add_entry(c.name+"'s death.", c.death_text)
+    def kill_member(self, crew_member):
+        crew_member.life = -10000
+        thorpy.launch_blocking_alert(crew_member.name + " is dead.", self.element)
+        self.journal.add_entry(crew_member.name + "'s death.", crew_member.death_text)
 
     def refresh_life_and_food(self):
         if self.ship.life <= 0:
@@ -758,19 +784,19 @@ class Game:
         #####################################refresh characters life
         temp_bad = abs(parameters.TEMP_IDEAL - self.temp) / parameters.TEMP_MAX
         new_living = []
-        for c in self.living_chars:
-            refresh = c.refresh_life(self.stock, temp_bad)
+        for crew_member in self.living_chars:
+            refresh = crew_member.refresh_life(self.stock, temp_bad)
             if refresh:
-                self.echars[c].set_life(c.life)
-                if c.life <= 0:
-                    self.kill_member(c)
+                self.echars[crew_member].set_life(crew_member.life)
+                if crew_member.life <= 0:
+                    self.kill_member(crew_member)
                 else:
-                    new_living.append(c)
+                    new_living.append(crew_member)
             else:
-                new_living.append(c)
+                new_living.append(crew_member)
         if not new_living:
             print("Game over")
-            thorpy.launch_blocking_alert("No one survived the terrible expedition.\nGame over")
+            thorpy.launch_blocking_alert("No one survived the terrible expedition.\nGame over.")
             self.journal.add_entry("This is the end.", "If someone finds this log. Please bring it back to our city.")
             self.show_end()
             return
@@ -781,17 +807,18 @@ class Game:
                 self.controlled = new_living[0]
                 self.refresh_controlled()
         self.living_chars = new_living
-        self.e_food.set_life(self.stock.food/self.stock.max_food)
-        if self.i%parameters.MOD_VILLAGE_FOOD_REGEN == 0:
-            for v in self.villages:
-                if v.food < v.max_food:
-                    v.food += int(parameters.MAX_VSF*v.n/10)
+        self.e_food.set_life(self.stock.food / self.stock.max_food)
+        self.e_water.set_life(self.stock.water / self.stock.max_water)
+        if self.curr_keyaction % parameters.MOD_VILLAGE_FOOD_REGEN == 0:
+            for village in self.villages:
+                if village.food < village.max_food:
+                    village.food += int(parameters.MAX_VSF * village.n / 10)
         ################################################################
 
     def wait(self):
-        if self.i % parameters.MOD_LOW == 0:
+        if self.curr_keyaction % parameters.MOD_LOW == 0:
             self.reac_time_low()
-        if self.i % parameters.MOD_LIFE == 0:
+        if self.curr_keyaction % parameters.MOD_LIFE == 0:
             self.refresh_life_and_food()
 ##            screen.fill((255,255,255))
             self.cam.show(self.screen)
@@ -801,7 +828,7 @@ class Game:
             self.falls.refresh()
             self.falls.blit()
         #
-        self.i += 1
+        self.curr_keyaction += 1
         #
 
     def reac_time_low(self):
@@ -835,11 +862,11 @@ class Game:
         #temperature
         self.refresh_temperature()
         self.temp_pix = self.temp*parameters.TNORM_A + parameters.TNORM_B
-        self.e_temp.set_text(str(self.temp_text)+" C ")
+        self.e_temp.set_text(str(self.temp_text) + " C ")
         #coordinates
         alt_text = int((self.height-parameters.SUMMER_LEVEL)*parameters.FACTOR_ALT)
         self.alt_text = alt_text
-        self.e_alt.set_text("Alt.: "+str(alt_text)+ " m")
+        self.e_alt.set_text("Alt.: "+str(alt_text) + " m")
 ##        if self.a.life > 0:
 ##            x,y = self.cam.chunk
 ##        else:
@@ -851,7 +878,7 @@ class Game:
             x = str(xint)
             y = str(yint)
         else:
-            x,y = "?", "?"
+            x, y = "?", "?"
         self.e_x.set_text("X: "+x)
         self.e_y.set_text("Y: "+y)
 ##        self.pos_int += (xint,yint)
@@ -859,7 +886,7 @@ class Game:
         if self.refresh_ship_life:
             self.e_life_ship.set_life(self.ship.life)
         #time
-        newday = int(self.i * parameters.DAY_FACTOR)
+        newday = int(self.curr_keyaction * parameters.DAY_FACTOR)
         if newday > self.day:
             self.set_next_day()
 ##            self.advance_days(newday-self.day) #to be validated
@@ -886,7 +913,7 @@ class Game:
             self.day = newday
             self.e_clock.set_text("Day "+str(newday))
         #
-        if self.i > 0:
+        if self.curr_keyaction > 0:
             self.stats.refresh()
         d = (self.ship.img_pos+Vector2(self.ship.img.get_size())/2).distance_to(parameters.CENTER)
         self.can_board = d < parameters.BOARDING_DISTANCE
@@ -1002,9 +1029,9 @@ class Game:
 ##            else:
 ##                self.monitor.launch_fading_alert("Generating chunk...")
             self.building_map = False
-        if self.i % parameters.MOD_LOW == 0:
+        if self.curr_keyaction % parameters.MOD_LOW == 0:
             self.reac_time_low()
-        if self.i % parameters.MOD_LIFE == 0:
+        if self.curr_keyaction % parameters.MOD_LIFE == 0:
             self.refresh_life_and_food()
 ##        if self.i % parameters.MOD_SAVE_GAME == 0:
 ##            self.monitor.launch_fading_alert("Saving game...")
@@ -1078,7 +1105,7 @@ class Game:
         pygame.display.flip()
         self.refresh_img_pos()
         self.direction = False
-        self.i += 1
+        self.curr_keyaction += 1
         #
 
     def refresh_img_pos(self, delta=None):
@@ -1131,13 +1158,13 @@ class Game:
             if self.aboard:
                 self.ship.refresh_img(self.i, self.side)
                 self.ship.smokegen.kill_old_elements()
-                if self.i%10 == 0:
+                if self.curr_keyaction % 10 == 0:
                     q = Vector2(parameters.CENTER)-self.input_direction*10
                     if self.side == SIDE_LEFT or self.side == SIDE_RIGHT:
                         q += (0,10)
                     self.ship.smokegen.generate(q)
             elif self.swimming:
-                if self.i%20 == 0:
+                if self.curr_keyaction % 20 == 0:
                     for c in self.living_chars:
                         self.ship.smokegen.generate(Vector2(c.img_pos))
             self.ship.smokegen.update_physics(-self.ship.velocity)
