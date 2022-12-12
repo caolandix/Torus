@@ -550,9 +550,9 @@ class Game:
             fn = self.save.fn
         else:
             i = len([f for f in os.listdir("./") if f.startswith("save") and f.endswith(".dat")])
-            fn = "save"+str(i)+".dat"
+            fn = "save" + str(i) + ".dat"
             self.saved = True
-        savemanager.save_game(fn,self)
+        savemanager.save_game(fn, self)
 
     def reac_x(self):
         ok_food = self.stock.food < parameters.CRITICAL_FOOD
@@ -604,7 +604,7 @@ class Game:
         self.storm_duration -= 1
         self.next_season -= 1
         if self.next_season == 5 and not self.waiting:
-            next_idx = (self.season_idx+1)%len(self.seasons)
+            next_idx = (self.season_idx + 1) % len(self.seasons)
             thorpy.launch_blocking_alert(self.seasons[next_idx].text)
             if self.seasons[next_idx].name == "Winter":
                 sound.play_music("before winter")
@@ -614,13 +614,13 @@ class Game:
         self.day += 1
 
     def hunt_success(self):
-        temp_factor = (self.temp+15)/100.
+        temp_factor = (self.temp + 15) / 100.
         print("temp factor", temp_factor)
         #
         hunt_factor = max([c.hunting for c in self.living_chars])
         print("hunt factor", hunt_factor)
         #
-        factor = 0.6*hunt_factor + 0.4*temp_factor
+        factor = 0.6 * hunt_factor + 0.4 * temp_factor
         print("prefactor", factor)
         if self.near_forest: #add bonus
             factor += 0.2
@@ -1004,7 +1004,7 @@ class Game:
         #step 2: load new chunks
         i = 0.
         for chunk in self.near_chunks():
-            e.set_life(i/parameters.MAX_CHUNKS)
+            e.set_life(i / parameters.MAX_CHUNKS)
             e.blit()
             e.update()
             i += 1.
@@ -1137,17 +1137,13 @@ class Game:
                     if v.type == "c" :
                         self.near_camp = v
 
-##    def blit_oasises(self):
-##        for v in self.oasises: #blit houses
-##            v.blit(self.screen)
-##            if distance_to_center(v.pos+v.semisize) < v.maxwidth:
-##                self.near_village = v
 
     def storm(self, value):
         if value:
             self.ship.imgs = self.ship.storm_imgs
         else:
             self.ship.imgs = self.ship.normal_imgs
+
 
     def blit_things(self):
         self.near_village = None
@@ -1156,7 +1152,7 @@ class Game:
         self.blit_villages()
         if self.aboard or self.swimming:
             if self.aboard:
-                self.ship.refresh_img(self.i, self.side)
+                self.ship.refresh_img(self.curr_keyaction, self.side)
                 self.ship.smokegen.kill_old_elements()
                 if self.curr_keyaction % 10 == 0:
                     q = Vector2(parameters.CENTER)-self.input_direction*10
@@ -1204,19 +1200,18 @@ class Game:
         pos_arrows.top = pos_life.bottom + 10
         self.screen.blit(img_arrow, pos_arrows)
         pygame.draw.line(self.screen, parameters.GIROUETTE_COLOR,
-                            girouette_pos, self.current_wind_draw+girouette_pos,
+                            girouette_pos, self.current_wind_draw + girouette_pos,
                             3)
-##        pygame.draw.rect(self.screen,(255,0,0),pygame.Rect(parameters.CENTER[0],parameters.CENTER[1],4,4))
 
 
     def try_building_village(self, chunk, hmap):
-        return try_building_structure(self, chunk, (houses[0],houses[1]), hmap, "v")
+        return try_building_structure(self, chunk, (houses[0], houses[1]), hmap, "v")
 
     def try_building_oasis(self, chunk, hmap):
-        return try_building_structure(self, chunk, (oasises[0],oasises[1]), hmap, "o")
+        return try_building_structure(self, chunk, (oasises[0], oasises[1]), hmap, "o")
 
     def try_building_firs(self, chunk, hmap):
-        return try_building_structure(self, chunk, (firs[0],firs[1]), hmap, "f")
+        return try_building_structure(self, chunk, (firs[0], firs[1]), hmap, "f")
 
     def try_putting_treasure(self, chunk, hmap):
         if self.save:
@@ -1227,7 +1222,7 @@ class Game:
             if np.random.random() < parameters.TREASURE_PROB:
                 i = 0
                 while i < parameters.VILLAGE_TRY:
-                    chunkpos = np.random.randint(0,parameters.S,2)
+                    chunkpos = np.random.randint(0,parameters.S, 2)
                     cx,cy = chunkpos
                     if hmap[cx,cy] > parameters.VILLAGE_LEVEL:
                         absolute_pos = np.array(chunk)*parameters.S + chunkpos

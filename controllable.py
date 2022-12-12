@@ -1,6 +1,5 @@
 from pygame.math import Vector2
 import parameters
-import ship
 
 class FoodStock:
 
@@ -100,7 +99,6 @@ class Treasure(Flag): #degeulasse mais rapide
         self.chunk = chunk
 
 class Controllable(Tile):
-
     def __init__(self):
         Tile.__init__(self)
         self.img_pos = Vector2()
@@ -110,10 +108,10 @@ class Controllable(Tile):
         self.currently_animated = False
 
     def control_life(self):
-        if self.life > 1.:
-            self.life = 1.
-        elif self.life < 0.:
-            self.life = 0.
+        if self.life > 1.0:
+            self.life = 1.0
+        elif self.life < 0.0:
+            self.life = 0.0
 
     def get_current_pos(self, cam):
         return self.img_pos + cam.pos

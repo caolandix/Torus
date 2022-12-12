@@ -24,9 +24,9 @@ class Character(Controllable):
 
     def refresh_life(self, stock, temperature_bad):
         tmp = self.life
-        self.life -= (parameters.TBAD_FACTOR * temperature_bad * (self.weakness + 0.2)) + parameters
+        self.life -= (parameters.TBAD_FACTOR * temperature_bad * (self.weakness + 0.2))
         food_consumption = min(stock.food, parameters.FOOD_PER_TURN)
-        water_consumption = min(stock.water, paramaters.WATER_PER_TURN)
+        water_consumption = min(stock.water, parameters.WATER_PER_TURN)
         self.life += food_consumption
         stock.food -= food_consumption
         stock.water -= water_consumption

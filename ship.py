@@ -97,7 +97,7 @@ class Ship(Controllable):
         self.img = self.imgs[side+self.curr_keyaction]
 ##        self.reflect = self.reflects[side+self.i]
         if i % self.mod_rot == 0:
-            self.i = (self.curr_keyaction + 1) % self.mod_phase
+            self.curr_keyaction = (self.curr_keyaction + 1) % self.mod_phase
 
     def anchor(self):
         self.img = self.imgs[self.side]

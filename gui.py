@@ -51,7 +51,7 @@ class AlertMonitor:
         self.line_camp = get_line_info("Press ", "c", " to camp/uncamp")
         self.line_hunt = get_line_info("Press ", "h", " to hunt")
         self.line_cannibal = get_line_info("Critical food! Press ", "x", " to cannibalize crew ...",4,(255,0,0))
-        self.line_dehydration = get_line_info("Critical water! Find water soon!", 4, (255, 0, 0))
+        self.line_dehydration = get_line_info("Critical water!", "w", "Find water soon!", 4, (255, 0, 0))
         self.line_wait = get_line_info("Press ", "p", " to wait until next season")
         self.x = 5
         self.y = 5
@@ -122,13 +122,9 @@ class AlertMonitor:
 
 
 class LifeBar(thorpy.Element):
-
-    def __init__(self, text, color=(255,165,0), text_color=(0,0,0),
-                    size=parameters.LIFEBAR_SIZE):
+    def __init__(self, text, color=(255, 165, 0), text_color=(0, 0, 0), size=parameters.LIFEBAR_SIZE):
         thorpy.Element.__init__(self)
-        painter = thorpy.painterstyle.ClassicFrame(size,
-                                                    color=thorpy.style.DEF_COLOR,
-                                                    pressed=True)
+        painter = thorpy.painterstyle.ClassicFrame(size, color=thorpy.style.DEF_COLOR, pressed=True)
         self.set_painter(painter)
         self.finish()
         #
@@ -136,8 +132,8 @@ class LifeBar(thorpy.Element):
         self.life_text.center(element=self)
         self.life_color = color
         self.add_elements([self.life_text])
-        self.life_width = size[0]-2
-        self.life_rect = pygame.Rect(1,1, self.life_width,size[1]-2)
+        self.life_width = size[0] - 2
+        self.life_rect = pygame.Rect(1, 1, self.life_width, size[1] - 2)
 
     def set_life_text(self, text):
         self.life_text.set_text(text)
@@ -155,18 +151,20 @@ class LifeBar(thorpy.Element):
             e.blit()
         self._unclip_screen()
 
-    def move(self,shift):
-        thorpy.Element.move(self,shift)
+    def move(self, shift):
+        thorpy.Element.move(self, shift)
         self.life_rect.move_ip(shift)
 
-    def set_life(self,life):
-        self.life_rect.width = int(life*self.life_width)
+    def set_life(self, life):
+        self.life_rect.width = int(life * self.life_width)
+
+    def set_water(self, water):
+        self.life_rect.width = int(water * self.life_width)
 
 
 
 
 class GUI:
-
     def __init__(self, game):
         self.game = game
         self.game.gui = self
@@ -192,9 +190,7 @@ class GUI:
         self.e_stats = thorpy.make_button("Statistics", launch_stats)
         self.e_options = thorpy.make_button("Options",launch_options)
         #
-        self.e_pause = thorpy.make_ok_cancel_box([self.e_controls, self.e_save,
-                                                    self.e_stats, self.e_options],
-                                                  "Continue game", "Quit game")
+        self.e_pause = thorpy.make_ok_cancel_box([self.e_controls, self.e_save, self.e_stats, self.e_options], "Continue game", "Quit game")
         #
         self.pause_launcher = thorpy.get_launcher(self.e_pause,
                                                     launching=game.element)

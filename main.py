@@ -30,17 +30,19 @@ def run_game():
     METADATA_PATH = "./metadata" #create a file for storing data on application
     mdm = thorpy.MetaDataManager()
     mdm.read_data(METADATA_PATH)
-    app = thorpy.Application((S,S))
+    app = thorpy.Application((S, S))
     mdm.load_font_data(METADATA_PATH)
     gui.show_loading()
-    gui.playing() #set key delay
+    
+    #set key delay
+    gui.playing()
     thorpy.set_theme("human")
     screen = thorpy.get_screen()
     e_bckgr = thorpy.Ghost.make()
     sound.play_random_music()
     terrain.cache()
     
-    savefile=gui.launch_main_menu() #xxx
+    savefile = gui.launch_main_menu() #xxx
     climate = terrain.Climate(0)
     
     if savefile:
