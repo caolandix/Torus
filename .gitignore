@@ -1,0 +1,6 @@
+### KOMODO ###
+*.komodoproject
+.komodotools/
+
+### Built files within directories ###
+__pycache__/
