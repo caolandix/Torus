@@ -4,6 +4,10 @@ import parameters
 from controllable import Controllable
 import fx
 
+
+"""
+Rotate the boat around 
+"""
 def rotate_in_water(img, degrees):
     post_rotate_img = pygame.transform.rotate(img, degrees)
     ws, hs = img.get_size()
@@ -38,14 +42,14 @@ class Ship(Controllable):
         self.food = self.max_food
         self.water = self.max_water
         self.mass = mass
-        self.maxvel = maxvel/10.
+        self.maxvel = maxvel / 10.0
         self.life = life
         self.force = Vector2()
         self.img = None
         self.captain = captain
         self.name = "Ship"
         self.dead = False
-        self.weakness = 0.
+        self.weakness = 0.0
         self.imgs = None
 ##        self.reflects = None
         self.normal_imgs = None
@@ -54,7 +58,7 @@ class Ship(Controllable):
         self.mod_rot = parameters.MOD_LOW
         self.mod_phase = parameters.MOD_PHASE_SHIP
         self.side = 0
-        self.smokegen = fx.get_smokegen(n=100, color=(255,255,255), grow=0.1, i=30, prob=0.1, alpha0=255)
+        self.smokegen = fx.get_smokegen(n=100, color=(255, 255, 255), grow=0.1, i=30, prob=0.1, alpha0=255)
 
 
     def refood_from(self, stock):
